@@ -291,11 +291,42 @@
       top: 74px;
       max-height: calc(100vh - 96px);
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .passage-mobile-bar {
+      display: none;
     }
     @media (max-width: 900px) {
       .passage-pane {
         position: static;
-        max-height: none;
+        max-height: 42vh;
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+      .passage-pane.collapsed {
+        max-height: 44px;
+        overflow: hidden;
+      }
+      .passage-mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-secondary);
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .passage-toggle-btn {
+        background: var(--surface-muted);
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-size: 12px;
+        color: var(--ink);
+        cursor: pointer;
       }
     }
     .passage-pane h4 {
@@ -314,6 +345,8 @@
       margin: 12px 0;
       font-family: var(--font-sans);
       font-size: 13px;
+      display: block;
+      overflow-x: auto;
     }
     .passage-table th, .passage-table td {
       border: 1px solid var(--border-strong);
@@ -366,8 +399,9 @@
       align-items: flex-start;
       gap: 12px;
       width: 100%;
+      min-height: 48px;
       text-align: left;
-      padding: 12px 14px;
+      padding: 13px 14px;
       border: 1px solid var(--border-strong);
       border-radius: 6px;
       background: var(--surface);
@@ -375,6 +409,7 @@
       font-size: 15px;
       line-height: 1.45;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
       transition: all 0.12s;
     }
     .option-btn:hover:not(:disabled) {
@@ -462,8 +497,59 @@
       border: 1px solid var(--wrong-border);
       color: var(--wrong);
     }
-    @media (max-width: 600px) {
+    @media (max-width: 900px) {
       .kbd-hint { display: none; }
+    }
+    @media (max-width: 720px) {
+      .topbar-inner {
+        padding: 10px 12px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .brand {
+        justify-content: space-between;
+      }
+      .topbar-meta {
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+      }
+      .stat-pill {
+        font-size: 12px;
+        padding: 3px 7px;
+      }
+      .btn-sm {
+        padding: 5px 9px;
+        font-size: 12px;
+      }
+      .container, .container-narrow {
+        padding: 14px 12px 48px;
+      }
+      .card, .question-pane {
+        padding: 16px 14px;
+      }
+      .q-stem {
+        font-size: 15px;
+        margin-bottom: 14px;
+      }
+      .quiz-nav {
+        gap: 8px;
+      }
+      .quiz-nav .btn {
+        flex: 1;
+        min-height: 42px;
+      }
+      .score-banner {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .score-box {
+        padding: 12px 10px;
+      }
+      .score-box .value {
+        font-size: 18px;
+      }
     }
 
     /* Navigator Drawer */
@@ -963,8 +1049,16 @@
 
       if (q.passageHtml) {
         quizGrid.classList.add("has-passage");
-        passagePane.classList.remove("hidden");
-        passagePane.innerHTML = q.passageHtml;
+        passagePane.classList.remove("hidden", "collapsed");
+        passagePane.innerHTML = `<div class="passage-mobile-bar"><span>Bài đọc (cuộn để xem)</span><button type="button" class="passage-toggle-btn" id="passageToggleBtn">Thu gọn</button></div>` + q.passageHtml;
+        passagePane.scrollTop = 0;
+        const toggleBtn = document.getElementById("passageToggleBtn");
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", () => {
+            passagePane.classList.toggle("collapsed");
+            toggleBtn.textContent = passagePane.classList.contains("collapsed") ? "Mở rộng" : "Thu gọn";
+          });
+        }
       } else {
         quizGrid.classList.remove("has-passage");
         passagePane.classList.add("hidden");

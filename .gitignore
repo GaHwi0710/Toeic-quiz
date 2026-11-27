@@ -1,4 +1,7 @@
 *.jpg
+!assets/*.jpg
 *.jpeg
 *.png
 *.docx
+*.pdf
+*.mp3

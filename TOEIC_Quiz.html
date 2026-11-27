@@ -1087,7 +1087,8 @@
       qSectionBadge.textContent = q.section;
       qOriginalNum.textContent = `Câu gốc #${q.qNum}`;
 
-      const imgHtml = q.imageRel ? `<img class="q-image" src="${escapeHtml(q.imageRel)}" alt="Question ${q.qNum}" />` : "";
+      const GH_BASE = "https://gahwi0710.github.io/Toeic-quiz/";
+      const imgHtml = q.imageRel ? `<img class="q-image" src="${escapeHtml(q.imageRel)}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='${GH_BASE}'+'${escapeHtml(q.imageRel)}';}" alt="Question ${q.qNum}" />` : "";
       const leftHtml = imgHtml + (q.passageHtml || "");
       if (leftHtml) {
         quizGrid.classList.add("has-passage");
@@ -1110,7 +1111,7 @@
 
       qStem.textContent = q.question ? `${currentIndex + 1}. ${q.question}` : `${currentIndex + 1}. (Chọn đáp án điền vào chỗ trống (${q.qNum}))`;
       if (q.audioRel) {
-        audioWrap.innerHTML = `<audio class="q-audio" controls preload="none" src="${escapeHtml(q.audioRel)}"></audio>`;
+        audioWrap.innerHTML = `<audio class="q-audio" controls playsinline preload="metadata" src="${escapeHtml(q.audioRel)}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='${GH_BASE}'+'${escapeHtml(q.audioRel)}';this.load();}"></audio>`;
       } else {
         audioWrap.innerHTML = "";
       }
